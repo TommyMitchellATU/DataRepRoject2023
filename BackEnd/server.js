@@ -1,90 +1,85 @@
-const express = require('express')
-const app = express()
-const port = 4000
+const express = require('express');
+const app = express();
+const port = 4000; // Setting the port number where the server will run
 const cors = require('cors');
 
+app.use(cors()); // Allowing all CORS requests for this Express app
 
-app.use(cors());
+// Middleware to handle headers for CORS and allow certain HTTP methods and headers
 app.use(function(req, res, next) {
-res.header("Access-Control-Allow-Origin", "*");
-res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-res.header("Access-Control-Allow-Headers",
-"Origin, X-Requested-With, Content-Type, Accept");
-next();
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
 
+ // Importing body-parser middleware for parsing incoming request bodies
 const bodyParser = require("body-parser");
 
-//Here we are configuring express to use body-parser as middle-ware.
-app.use(bodyParser.urlencoded({ extended: false }));
+// Configuring body-parser to handle URL-encoded data and JSON data
+app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
 
-
-// getting-started.js
+// Connecting to a MongoDB database using Mongoose
 const mongoose = require('mongoose');
-
 main().catch(err => console.log(err));
 
 async function main() {
-  await mongoose.connect('mongodb+srv://admin:admin@martinscluster.w5rtkz0.mongodb.net/DB14?retryWrites=true&w=majority');
-
-  // use `await mongoose.connect('mongodb://user:password@127.0.0.1:27017/test');` if your database has auth enabled
+  await mongoose.connect('mongodb+srv://g00400162:Tuesday@cluster0.aklr9hh.mongodb.net/?retryWrites=true&w=majority');
+  // This connects to a MongoDB database using the Mongoose library
 }
 
+// Defining a schema for the 'books' collection in the MongoDB database
 const bookSchema = new mongoose.Schema({
-  title:String,
-  cover:String,
-  author:String
-})
+  title: String,
+  cover: String,
+  author: String
+});
 
+// Creating a model for the 'books' collection based on the defined schema
 const bookModel = mongoose.model('dfgdfgdfgdfg5r5645634fggh', bookSchema);
 
-app.delete('/api/book/:id',async (req, res)=>{
-  console.log("Delete: "+req.params.id);
-
+// Handling HTTP DELETE requests to delete a book by ID
+app.delete('/api/book/:id', async (req, res) => {
   let book = await bookModel.findByIdAndDelete(req.params.id);
   res.send(book);
-})
+});
 
-
-app.put('/api/book/:id', async(req, res)=>{
-  console.log("Update: "+req.params.id);
-
-  let book = await bookModel.findByIdAndUpdate(req.params.id, req.body, {new:true});
+// Handling HTTP PUT requests to update a book by ID
+app.put('/api/book/:id', async (req, res) => {
+  let book = await bookModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
   res.send(book);
-})
+});
 
+// Handling HTTP POST requests to create a new book
+app.post('/api/book', (req, res) => {
+  bookModel.create({
+    title: req.body.title,
+    cover: req.body.cover,
+    author: req.body.author
+  })
+  .then(() => { res.send("Book Created") })
+  .catch(() => { res.send("Book NOT Created") });
+});
 
-app.post('/api/book', (req,res)=>{
-    console.log(req.body);
-
-    bookModel.create({
-      title:req.body.title,
-      cover:req.body.cover,
-      author:req.body.author
-    })
-    .then(()=>{ res.send("Book Created")})
-    .catch(()=>{ res.send("Book NOT Created")});
-
-})
-
+// Handling a root route, sending a simple response
 app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+  res.send('Hello World!');
+});
 
-app.get('/api/books', async(req, res)=>{
-    
+// Handling HTTP GET requests to fetch all books
+app.get('/api/books', async (req, res) => {
   let books = await bookModel.find({});
   res.json(books);
-})
+});
 
-app.get('/api/book/:identifier',async (req,res)=>{
-  console.log(req.params.identifier);
-
+// Handling HTTP GET requests to fetch a book by its identifier
+app.get('/api/book/:identifier', async (req, res) => {
   let book = await bookModel.findById(req.params.identifier);
   res.send(book);
-})
+});
 
+// Starting the server, listening on the specified port
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Example app listening on port ${port}`);
+});
