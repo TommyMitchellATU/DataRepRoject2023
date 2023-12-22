@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const port = 4000;
 const cors = require('cors');
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(cors()); // Allowing all CORS requests for this Express app
 
@@ -13,7 +16,7 @@ app.use(function(req, res, next) {
   next();
 });
 
- // Importing body-parser middleware for parsing incoming request bodies
+// Importing body-parser middleware for parsing incoming request bodies
 const bodyParser = require("body-parser");
 
 // Configuring body-parser to handle URL-encoded data and JSON data
@@ -64,7 +67,7 @@ app.post('/api/book', (req, res) => {
 
 // Handling a root route, sending a simple response
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Handling HTTP GET requests to fetch all books
@@ -77,6 +80,11 @@ app.get('/api/books', async (req, res) => {
 app.get('/api/book/:identifier', async (req, res) => {
   let book = await bookModel.findById(req.params.identifier);
   res.send(book);
+});
+
+// Serving the App.js file
+app.get('/app.js', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'src', 'app.js'));
 });
 
 // Starting the server, listening on the specified port
