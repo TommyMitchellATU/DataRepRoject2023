@@ -37,17 +37,11 @@ const placeSchema = new mongoose.Schema({
   location: String,
 });
 
-const locationSchema = new mongoose.Schema({
-  name: String,
-  latitude: Number,
-  longitude: Number,
-});
-
 // Creating a model for the 'places' collection based on the defined schema
 const placeModel = mongoose.model('Place', placeSchema);
 
 // Handling HTTP POST requests to create a new place
-app.post('/api/place', async (req, res) => {
+app.post('/api/location', async (req, res) => {
   try {
     let place = await placeModel.create({
       location: req.body.location,
@@ -59,10 +53,29 @@ app.post('/api/place', async (req, res) => {
 });
 
 // Handling HTTP GET requests to fetch all places
-app.get('/api/places', async (req, res) => {
+app.get('/api/location', async (req, res) => {
   try {
     let places = await placeModel.find({});
-    res.json(places);
+    let placesWithWeather = [];
+
+    for (let place of places) {
+      // Fetch weather data for each place using an external weather API
+      let weatherData = await axios.get(`https://api.weatherapi.com/v1/current.json?key=118e69e8d93b40ce92d93634232212&q=${place.location}`);
+      let weather = weatherData.data.current;
+
+      // Add the weather data to the place object
+      let placeWithWeather = {
+        location: place.location,
+        weather: {
+          temperature: weather.temp_c,
+          condition: weather.condition.text,
+        },
+      };
+
+      placesWithWeather.push(placeWithWeather);
+    }
+
+    res.json(placesWithWeather);
   } catch (error) {
     res.status(500).send("Error fetching places");
   }
