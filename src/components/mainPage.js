@@ -2,28 +2,46 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles.css';
 
-function Content() {
-  const [weather, setWeather] = useState(null);
-  const location = 'Galway';
+function MainPage() {
+  const [location, setLocation] = useState('');
 
   useEffect(() => {
-    // Fetch weather data when the component mounts or when the location changes
-    const fetchWeather = async () => {
+    const fetchLocation = async () => {
       try {
-        const response = await axios.get(
-          `https://api.weatherapi.com/v1/forecast.json?key=118e69e8d93b40ce92d93634232212&q=${encodeURIComponent(
-            location
-          )}&days=7`
-        );
-        setWeather(response.data);
+        const response = await axios.get('/api/location');
+        setLocation(response.data.name);
+        fetchWeatherData(response.data.name); // Call the function to fetch weather data
       } catch (error) {
-        console.error('Error fetching weather data:', error);
+        console.error('Error fetching location data:', error);
       }
     };
 
-    fetchWeather();
-  }, [location]);
+    fetchLocation();
+  }, []);
 
+  const fetchWeatherData = async (location) => {
+    try {
+      const response = await axios.get(
+        `https://api.weatherapi.com/v1/forecast.json?key=118e69e8d93b40ce92d93634232212&q=${encodeURIComponent(
+          location
+        )}&days=7`
+      );
+      setWeather(response.data);
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+    }
+  };
+
+  const [weather, setWeather] = useState(null);
+
+  return (
+    <div>
+      {location && <Content location={location} weatherData={weather} />}
+    </div>
+  );
+}
+
+function Content({ location, weatherData }) {
   const getDayOfWeek = (dateString) => {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const date = new Date(dateString);
@@ -40,14 +58,14 @@ function Content() {
 
   return (
     <div className="weather-section">
-      {weather ? (
+      {weatherData ? (
         <div>
           {/* Weather forecast heading */}
-          <h2 className="weather-heading">Weather Forecast</h2>
+          <h2 className="weather-heading">Weather Forecast for {location}</h2>
           <div className="week-container">
-            {weather.forecast && weather.forecast.forecastday ? (
+            {weatherData.forecast && weatherData.forecast.forecastday ? (
               // Map over forecast days and display weather information
-              weather.forecast.forecastday.map((day) => (
+              weatherData.forecast.forecastday.map((day) => (
                 <div className="day-box" key={day.date}>
                   {/* Display the day of the week */}
                   <h3>{getDayOfWeek(day.date)}</h3>
@@ -75,4 +93,4 @@ function Content() {
   );
 }
 
-export default Content;
+export default MainPage;

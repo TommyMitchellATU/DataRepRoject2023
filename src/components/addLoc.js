@@ -1,21 +1,23 @@
 import React, { useState } from "react";
 import axios from "axios";
 
-function AddPlace() {
+function AddLoc() {
   const [placeName, setPlaceName] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    console.log("Place Name: " + placeName);
 
     const place = {
       placeName: placeName
     };
 
     axios.post('http://localhost:4000/api/place', place)
-      .then()
-      .catch();
+      .then((response) => {
+        console.log("Place added successfully!");
+      })
+      .catch((error) => {
+        console.log("Error adding place:", error);
+      });
   };
 
   return (
@@ -28,6 +30,7 @@ function AddPlace() {
             className="form-control"
             value={placeName}
             onChange={(e) => { setPlaceName(e.target.value) }}
+            
           />
         </div>
         <div>
@@ -38,4 +41,4 @@ function AddPlace() {
   );
 }
 
-export default AddPlace;
+export default AddLoc;
