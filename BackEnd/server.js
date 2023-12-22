@@ -44,7 +44,7 @@ const placeModel = mongoose.model('Place', placeSchema);
 app.post('/api/location', async (req, res) => {
   try {
     let place = await placeModel.create({
-      location: req.body.location,
+      location: req.body.placeName,
     });
     res.send(place);
   } catch (error) {
@@ -52,7 +52,7 @@ app.post('/api/location', async (req, res) => {
   }
 });
 
-// Handling HTTP GET requests to fetch all places
+// Handling HTTP GET requests to fetch all locations
 app.get('/api/location', async (req, res) => {
   try {
     let places = await placeModel.find({});
