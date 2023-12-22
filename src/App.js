@@ -7,7 +7,6 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Place from './components/addLoc';
-import Read from './components/read';
 import Edit from './components/edit';
 
 function App() {
@@ -20,13 +19,11 @@ function App() {
             <Nav className="me-auto">
               <Nav.Link href="/">Home</Nav.Link>
               <Nav.Link href="/Place">Add Location</Nav.Link>
-              <Nav.Link href="/read">Read</Nav.Link>
             </Nav>
           </Container>
         </Navbar>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/read" element={<Read />} />
           <Route path="/Place" element={<Place />} />
           <Route path="/edit/:id" element={<Edit />} />
         </Routes>

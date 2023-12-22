@@ -8,9 +8,10 @@ function MainPage() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await axios.get('/api/location');
-        setLocation(response.data.name);
-        fetchWeatherData(response.data.name); // Call the function to fetch weather data
+        const response = await axios.get('http://localhost:4000/api/location');
+        console.log(response.data[0].location)
+        setLocation(response.data[0].location);
+        fetchWeatherData(response.data[0].location); // Call the function to fetch weather data
       } catch (error) {
         console.error('Error fetching location data:', error);
       }
@@ -22,9 +23,7 @@ function MainPage() {
   const fetchWeatherData = async (location) => {
     try {
       const response = await axios.get(
-        `https://api.weatherapi.com/v1/forecast.json?key=118e69e8d93b40ce92d93634232212&q=${encodeURIComponent(
-          location
-        )}&days=7`
+        `https://api.weatherapi.com/v1/forecast.json?key=118e69e8d93b40ce92d93634232212&q=${location}&days=7`
       );
       setWeather(response.data);
     } catch (error) {
@@ -72,7 +71,7 @@ function Content({ location, weatherData }) {
                   {day.day && (
                     <>
                       {/* Display the average temperature */}
-                      <p>Average Temperature: {getAverageTemperature(day)}°C</p>
+                      <p>Average Temperature: {getAverageTemperature(day)}Â°C</p>
                       {/* Display the weather condition */}
                       <p>Condition: {day.day.condition.text}</p>
                     </>

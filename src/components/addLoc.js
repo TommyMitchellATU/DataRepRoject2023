@@ -11,7 +11,7 @@ function AddLoc() {
       placeName: placeName
     };
 
-    axios.post('http://localhost:4000/api/place', place)
+    axios.post('http://localhost:4000/api/location', place)
       .then((response) => {
         console.log("Place added successfully!");
       })

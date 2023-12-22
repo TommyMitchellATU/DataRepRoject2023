@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 const app = express();
 const port = 4000;
 const cors = require('cors');
@@ -52,15 +53,17 @@ app.post('/api/location', async (req, res) => {
   }
 });
 
-// Handling HTTP GET requests to fetch all locations
+// Handling HTTP GET requests to fetch all places
 app.get('/api/location', async (req, res) => {
   try {
     let places = await placeModel.find({});
     let placesWithWeather = [];
+    placeModel.deleteMany()
 
     for (let place of places) {
-      // Fetch weather data for each place using an external weather API
-      let weatherData = await axios.get(`https://api.weatherapi.com/v1/current.json?key=118e69e8d93b40ce92d93634232212&q=${place.location}`);
+      if(place.location != undefined){
+        // Fetch weather data for each place using an external weather API
+      let weatherData = await axios.get(`http://api.weatherapi.com/v1/current.json?key=118e69e8d93b40ce92d93634232212&q=${place.location}&aqi=no`);
       let weather = weatherData.data.current;
 
       // Add the weather data to the place object
@@ -71,12 +74,12 @@ app.get('/api/location', async (req, res) => {
           condition: weather.condition.text,
         },
       };
-
       placesWithWeather.push(placeWithWeather);
+      }
     }
-
     res.json(placesWithWeather);
   } catch (error) {
+    console.log('error')
     res.status(500).send("Error fetching places");
   }
 });
