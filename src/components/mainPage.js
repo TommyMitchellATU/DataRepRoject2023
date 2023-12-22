@@ -71,7 +71,7 @@ function Content({ location, weatherData }) {
                   {day.day && (
                     <>
                       {/* Display the average temperature */}
-                      <p>Average Temperature: {getAverageTemperature(day)}Â°C</p>
+                      <p>Average Temperature: {getAverageTemperature(day)}°C</p>
                       {/* Display the weather condition */}
                       <p>Condition: {day.day.condition.text}</p>
                     </>

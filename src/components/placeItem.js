@@ -2,7 +2,7 @@ import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
-function BookItem(props) {
+function placeItem(props) {
     return (
       <div>
         <Card>
@@ -27,4 +27,4 @@ function BookItem(props) {
     );
   }
   
-  export default BookItem;
+  export default placeItem;
