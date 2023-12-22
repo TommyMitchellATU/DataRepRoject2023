@@ -9,6 +9,7 @@ export default function Edit() {
 
   const navigate = useNavigate();
 
+  // Send a PUT request to update the place data on the server
   useEffect(() => {
     axios.get('http://localhost:4000/api/place/' + id)
       .then((response) => {
@@ -24,8 +25,8 @@ export default function Edit() {
 
     const location = {
       title: place,
-      cover: '', // Add the appropriate value for the cover
-      author: '' // Add the appropriate value for the author
+      cover: '',
+      author: '' 
     }
 
     axios.put('http://localhost:4000/api/place/' + id, location)

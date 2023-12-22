@@ -3,15 +3,19 @@ import axios from 'axios';
 import '../styles.css';
 
 function MainPage() {
-  const [location, setLocation] = useState('');
+  //location
+  const [location, setLocation] = useState(''); 
 
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/api/location');
-        console.log(response.data[response.data.length-1].location)
+        // Fetch the loc
+        const response = await axios.get('http://localhost:4000/api/location'); 
+        // Log last location server
+        console.log(response.data[response.data.length-1].location); 
         setLocation(response.data[response.data.length-1].location);
-        fetchWeatherData(response.data[response.data.length-1].location); // Call the function to fetch weather data
+        // fetch weather data for location
+        fetchWeatherData(response.data[response.data.length-1].location);
       } catch (error) {
         console.error('Error fetching location data:', error);
       }
@@ -24,18 +28,20 @@ function MainPage() {
     try {
       const response = await axios.get(
         `https://api.weatherapi.com/v1/forecast.json?key=118e69e8d93b40ce92d93634232212&q=${location}&days=7`
-      );
-      setWeather(response.data);
+      ); // Fetch
+      // Set weather state  useing received weather data
+      setWeather(response.data); 
     } catch (error) {
       console.error('Error fetching weather data:', error);
     }
   };
 
-  const [weather, setWeather] = useState(null);
+  //weatther data
+  const [weather, setWeather] = useState(null); 
 
   return (
     <div>
-      {location && <Content location={location} weatherData={weather} />}
+      {location && <Content location={location} weatherData={weather} />} // Render the Content component if the location is available
     </div>
   );
 }
@@ -45,12 +51,13 @@ function Content({ location, weatherData }) {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const date = new Date(dateString);
     const dayOfWeek = date.getDay();
-    return daysOfWeek[dayOfWeek];
+    // Get the day of the week from a given date string
+    return daysOfWeek[dayOfWeek]; 
   };
 
   const getAverageTemperature = (day) => {
     if (day && day.day && day.day.avgtemp_c) {
-      return day.day.avgtemp_c;
+      return day.day.avgtemp_c; // Get the average temperature from the weather data for a specific day
     }
     return null;
   };

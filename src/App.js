@@ -13,6 +13,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
+        {/*NavBar*/}
         <Navbar bg="dark" variant="dark">
           <Container>
             <Navbar.Brand href="/">Navbar</Navbar.Brand>
@@ -22,6 +23,7 @@ function App() {
             </Nav>
           </Container>
         </Navbar>
+        {/*Routing*/}
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/Place" element={<Place />} />
