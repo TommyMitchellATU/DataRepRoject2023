@@ -9,9 +9,9 @@ function MainPage() {
     const fetchLocation = async () => {
       try {
         const response = await axios.get('http://localhost:4000/api/location');
-        console.log(response.data[0].location)
-        setLocation(response.data[0].location);
-        fetchWeatherData(response.data[0].location); // Call the function to fetch weather data
+        console.log(response.data[response.data.length-1].location)
+        setLocation(response.data[response.data.length-1].location);
+        fetchWeatherData(response.data[response.data.length-1].location); // Call the function to fetch weather data
       } catch (error) {
         console.error('Error fetching location data:', error);
       }
